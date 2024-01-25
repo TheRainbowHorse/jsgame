@@ -1,4 +1,4 @@
-export function generateLog(first, second){
+export const generateLog = (first, second) => {
     const { name: firstPerson } = first;
     const { name: secondPerson } = second;
     const logs = [

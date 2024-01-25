@@ -41,21 +41,51 @@ const enemy2 = {
     renderProgressbarHP: renderProgressbarHP,
 }
 
-$btnKick.addEventListener('click', function() {
-    console.log('Kick');
-    character.changeHP(random(20));
-    enemy1.changeHP(random(20));
-    enemy2.changeHP(random(20));
+let counter = () => {
+    let counter = 6;
+    return () => {
+        if (counter > 0) counter--;
+        else return null;
+        console.log(counter);
+        return counter
+    }
+}
+const count1 = counter();
+const count2 = counter();
+
+$btnKick.addEventListener('click', () => {
+    const count = count1();
+    if (count != null) {
+        $btnKick.innerText = 'Thunder Jolt ' + count + '/6';
+        console.log('Kick');
+        if (enemy1.damageHP > 0 || enemy2.damageHP > 0) character.changeHP(random(20));
+        if (character.damageHP > 0) {
+            enemy1.changeHP(random(20));
+            enemy2.changeHP(random(20));
+        }
+    }
+    if (count == 0 || character.damageHP == 0) {
+        $btnKick.disabled = true;
+    }
 });
 
-$btnShock.addEventListener('click', function() {
-    console.log('Kick');
-    character.changeHP(random(20));
-    enemy1.changeHP(random(60));
-    enemy2.changeHP(random(60));
+$btnShock.addEventListener('click', () => {
+    const count = count2();
+    if (count != null) {
+        $btnShock.innerText = 'Thunder Shock ' + count + '/6';
+        console.log('Kick');
+        if (enemy1.damageHP > 0 || enemy2.damageHP > 0) character.changeHP(random(20));
+        if (character.damageHP > 0) {
+            enemy1.changeHP(random(60));
+            enemy2.changeHP(random(60));
+        }
+    }
+    if (count == 0 || character.damageHP == 0) {
+        $btnShock.disabled = true;
+    }
 });
 
-function init() {
+const init = () => {
     console.log('Start Game!');
     character.renderHP();
     enemy1.renderHP();
@@ -91,7 +121,7 @@ function changeHP(count) {
         $logs.insertBefore($p, $logs.children[0]);
         if (this.damageHP == 0) {
             alert('Бедный ' + name + ' проиграл бой!');
-            if (enemy1.damageHP == 0 && enemy2.damageHP == 0){
+            if ((enemy1.damageHP == 0 && enemy2.damageHP == 0) || character.damageHP == 0){
                 $btnKick.disabled = true;
                 $btnShock.disabled = true;
             }
@@ -101,7 +131,7 @@ function changeHP(count) {
     this.renderHP();
 }
 
-function random(num) {
+const random = (num) => {
     return Math.ceil(Math.random() * num);
 }
 
