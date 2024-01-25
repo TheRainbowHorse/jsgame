@@ -1,5 +1,8 @@
+import { generateLog } from "./logs.js";
+
 const $btnKick = document.getElementById('btn-kick');
 const $btnShock = document.getElementById('btn-shock');
+const $logs = document.getElementById('logs');
 
 const character = {
     name: 'Pikachu',
@@ -65,22 +68,29 @@ function renderHP(){
 }
 
 function renderHPLife() {
-    this.elHP.innerText = this.damageHP + ' / ' + this.defaultHP;
+    const { damageHP: curHP, defaultHP: maxHP, elHP: element } = this;
+    element.innerText = curHP + ' / ' + maxHP;
 }
 
 function renderProgressbarHP() {
-    this.elProgressbar.style.width = (this.damageHP / this.defaultHP * 100) + '%';
+    const { damageHP: curHP, defaultHP: maxHP, elProgressbar: element } = this;
+    element.style.width = (curHP / maxHP * 100) + '%';
 }
 
 function changeHP(count) {
+    const { name } = this;
     if (this.damageHP != 0){
         if (this.damageHP < count) {
             this.damageHP = 0;
         } else {
             this.damageHP -= count;
         }
+        const log = this === character ? generateLog(this, enemy1.damageHP > 0 ? enemy1 : enemy2) : generateLog(this, character);
+        const $p = document.createElement('p');
+        $p.innerText = log + " Нанесено " + count + " урона: " + this.damageHP + "/" + this.defaultHP;
+        $logs.insertBefore($p, $logs.children[0]);
         if (this.damageHP == 0) {
-            alert('Бедный ' + this.name + ' проиграл бой!');
+            alert('Бедный ' + name + ' проиграл бой!');
             if (enemy1.damageHP == 0 && enemy2.damageHP == 0){
                 $btnKick.disabled = true;
                 $btnShock.disabled = true;

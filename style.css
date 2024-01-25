@@ -472,3 +472,8 @@ h1 {
 .action label {
     padding: 6px 0;
 }
+
+#logs {
+    height: 150px;
+    overflow: auto;
+}
